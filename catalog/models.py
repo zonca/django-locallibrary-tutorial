@@ -44,6 +44,7 @@ class Book(models.Model):
     language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
 
     cover = models.ImageField(upload_to='covers')
+    url = models.URLField(null=True)
     
     class Meta:
         ordering = ['title', 'author']
