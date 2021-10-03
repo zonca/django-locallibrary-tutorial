@@ -42,6 +42,8 @@ class Book(models.Model):
     # ManyToManyField used because a genre can contain many books and a Book can cover many genres.
     # Genre class has already been defined so we can specify the object above.
     language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
+
+    cover = models.ImageField(upload_to='covers')
     
     class Meta:
         ordering = ['title', 'author']
