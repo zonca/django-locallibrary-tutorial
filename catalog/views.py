@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.db.models import Count
 
 # Create your views here.
 
@@ -46,6 +47,7 @@ class AuthorListView(generic.ListView):
     """Generic class-based list view for a list of authors."""
     model = Author
     paginate_by = 10
+    queryset = Author.objects.all().annotate(book_count=Count("book"))
 
 
 class AuthorDetailView(generic.DetailView):
