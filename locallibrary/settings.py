@@ -148,3 +148,6 @@ STATIC_URL = '/static/'
 # Static file serving.
 # http://whitenoise.evans.io/en/stable/django.html#django-middleware
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+MEDIA_ROOT = BASE_DIR / 'media'  #. os.path.join(BASE_DIR, 'staticfiles')
+MEDIA_URL = '/media/'
