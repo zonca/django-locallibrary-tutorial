@@ -4,6 +4,13 @@ from django.db import models
 
 from django.urls import reverse  # To generate URLS by reversing URL patterns
 
+from django.contrib.auth.models import AbstractUser
+
+class User(AbstractUser):
+    class Meta:
+        db_table = 'auth_user'
+
+    students_at_Italian_school = models.IntegerField(default=1)
 
 class Genre(models.Model):
     """Model representing a book genre (e.g. Science Fiction, Non Fiction)."""
@@ -66,9 +73,6 @@ class Book(models.Model):
 
 import uuid  # Required for unique book instances
 from datetime import date
-
-from django.contrib.auth.models import User  # Required to assign User as a borrower
-
 
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""

@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_registration',
     # Add our new application 
-    'catalog.apps.CatalogConfig', #This object was created for us in /catalog/apps.py
+    'catalog', #This object was created for us in /catalog/apps.py
 ]
 
 MIDDLEWARE = [
@@ -156,3 +156,5 @@ MEDIA_URL = '/media/'
 #django-registration
 
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
+
+AUTH_USER_MODEL = 'catalog.User'
