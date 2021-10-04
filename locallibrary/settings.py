@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_registration',
     # Add our new application 
     'catalog.apps.CatalogConfig', #This object was created for us in /catalog/apps.py
 ]
@@ -151,3 +152,7 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_ROOT = BASE_DIR / 'media'  #. os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
+
+#django-registration
+
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
