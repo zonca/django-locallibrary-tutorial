@@ -23,3 +23,28 @@ class RenewBookForm(forms.Form):
 
         # Remember to always return the cleaned data.
         return data
+
+
+from django_registration.forms import RegistrationForm
+
+from .models import User
+
+
+class MyCustomUserForm(RegistrationForm):
+
+    students_at_Italian_school = forms.IntegerField(required=True, help_text="Number of students at Italian school, set to 0 if you donated books")
+    class Meta(RegistrationForm.Meta):
+        model = User
+        help_texts = {
+            'username': 'Required. Please set to "Firstname_Lastname" one of the students of Italian school. Letters, digits and @/./+/-/_ only',
+        }
+
+
+    def save(self, commit=True):
+        user = super(MyCustomUserForm, self).save(commit=False)
+        user.students_at_Italian_school = self.cleaned_data["students_at_Italian_school"]
+        if commit:
+            user.save()
+        return user
+
+MyCustomUserForm.Meta.fields  += ['students_at_Italian_school']

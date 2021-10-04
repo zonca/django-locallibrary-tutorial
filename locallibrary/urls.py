@@ -44,10 +44,17 @@ urlpatterns += [
     path('', RedirectView.as_view(url='/catalog/', permanent=True)),
 ]
 
-
+from django_registration.backends.activation.views import RegistrationView
+from catalog.forms import MyCustomUserForm
 
 #Add Django site authentication urls (for login, logout, password management)
 urlpatterns += [
+        path('accounts/register/',
+        RegistrationView.as_view(
+            form_class=MyCustomUserForm
+        ),
+        name='django_registration_register',
+    ),
     path('accounts/', include('django_registration.backends.activation.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
 ]
