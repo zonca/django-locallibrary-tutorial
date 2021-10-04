@@ -158,3 +158,5 @@ MEDIA_URL = '/media/'
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
 
 AUTH_USER_MODEL = 'catalog.User'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
