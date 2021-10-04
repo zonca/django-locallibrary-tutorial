@@ -78,4 +78,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
 
+UserAdmin.list_display += ('students_at_Italian_school',)  # don't forget the commas
+UserAdmin.list_filter += ('students_at_Italian_school',)
+UserAdmin.fieldsets += (('students_at_Italian_school', {'fields': ('students_at_Italian_school',)}),)
 admin.site.register(User, UserAdmin)
