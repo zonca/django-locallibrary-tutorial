@@ -1,6 +1,9 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+
+<p>Registration is only available to current students of Italian school or people who donated Italian books to the library</p>
+
 <form method="post" action=".">
   {% csrf_token %}
   {{ form.as_p }}
