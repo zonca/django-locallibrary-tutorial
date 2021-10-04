@@ -8,7 +8,7 @@ from django import forms
 class RenewBookForm(forms.Form):
     """Form for a librarian to renew books."""
     renewal_date = forms.DateField(
-            help_text="Enter a date between now and 4 weeks (default 3).")
+            help_text="Enter a date between now and 3 weeks (default 1).")
 
     def clean_renewal_date(self):
         data = self.cleaned_data['renewal_date']
@@ -17,7 +17,7 @@ class RenewBookForm(forms.Form):
         if data < datetime.date.today():
             raise ValidationError(_('Invalid date - renewal in past'))
         # Check date is in range librarian allowed to change (+4 weeks)
-        if data > datetime.date.today() + datetime.timedelta(weeks=4):
+        if data > datetime.date.today() + datetime.timedelta(weeks=3):
             raise ValidationError(
                 _('Invalid date - renewal more than 4 weeks ahead'))
 
