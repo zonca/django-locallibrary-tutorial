@@ -116,7 +116,7 @@ def renew_book_librarian(request, pk):
 
     # If this is a GET (or any other method) create the default form
     else:
-        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=1)
         form = RenewBookForm(initial={'renewal_date': proposed_renewal_date})
 
     context = {
@@ -125,6 +125,27 @@ def renew_book_librarian(request, pk):
     }
 
     return render(request, 'catalog/book_renew_librarian.html', context)
+
+@login_required
+def reserve_book(request, pk):
+    """View function for reserving a book."""
+    if request.user.bookinstance_set.count() > request.user.students_at_Italian_school+1:
+        pass
+    else:
+        book_instance = get_object_or_404(BookInstance, pk=pk)
+        book_instance.status = 'r'
+        book_instance.borrower = request.user
+        book_instance.save()
+    return HttpResponseRedirect(reverse('my-borrowed'))
+
+@login_required
+def cancel_reservation(request, pk):
+    book_instance = get_object_or_404(BookInstance, pk=pk)
+    if book_instance.borrower == request.user and book_instance.status == 'r':
+        book_instance.borrower = None
+        book_instance.status = 'a'
+        book_instance.save()
+    return HttpResponseRedirect(reverse('my-borrowed'))
 
 
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
