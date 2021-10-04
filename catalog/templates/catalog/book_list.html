@@ -4,15 +4,16 @@
     <h1>Book List</h1>
 
     {% if book_list %}
-    <ul>
 
       {% for book in book_list %}
-      <li>
-        <a href="{{ book.get_absolute_url }}">{{ book.title }}</a> ({{book.author}})
-      </li>
+        <div>
+          <a href="{{ book.get_absolute_url }}">
+          <img src="{{MEDIA_URL}}{{book.cover.url}}" width="150px" /></a>
+          <a href="{{ book.get_absolute_url }}"> {{ book.title }}</a> ({{book.author}})
+      </div>
+
       {% endfor %}
 
-    </ul>
 
     {% else %}
       <p>There are no books in the library.</p>
