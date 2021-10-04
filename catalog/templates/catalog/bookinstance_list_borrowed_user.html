@@ -1,6 +1,15 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+
+<p>
+You can borrow a maximum of <strong>{{ request.user.max_books }} </strong>books.</p>
+<p>
+Using the website you can reserve up to {{ request.user.max_books }}.
+However, you will need to give back your currently borrowed books before being able to pickup your reserved books, so that
+the total books checked-out are not over your maximum.
+</p>
+
     <h1>Borrowed books</h1>
 
     <ul>
