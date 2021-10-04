@@ -126,11 +126,13 @@ def renew_book_librarian(request, pk):
 
     return render(request, 'catalog/book_renew_librarian.html', context)
 
+from django.contrib import messages
+
 @login_required
 def reserve_book(request, pk):
     """View function for reserving a book."""
-    if request.user.bookinstance_set.count() > request.user.students_at_Italian_school+1:
-        pass
+    if request.user.bookinstance_set.filter(status__exact='r').count() >= request.user.students_at_Italian_school+1:
+        messages.error(request, 'Already reached the maximum number of {} Reserved books.'.format(request.user.students_at_Italian_school+1))
     else:
         book_instance = get_object_or_404(BookInstance, pk=pk)
         book_instance.status = 'r'
