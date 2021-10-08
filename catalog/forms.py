@@ -32,7 +32,7 @@ from .models import User
 
 class MyCustomUserForm(RegistrationForm):
 
-    students_at_Italian_school = forms.IntegerField(required=True, help_text="Number of students at Italian school, set to 0 if you donated books")
+    students_at_Italian_school = forms.IntegerField(required=True, help_text="Number of students at Italian school, set to 0 if you just donated books, you will still be able to borrow 1 book")
     class Meta(RegistrationForm.Meta):
         model = User
         help_texts = {
