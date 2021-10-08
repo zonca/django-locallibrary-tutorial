@@ -131,8 +131,8 @@ from django.contrib import messages
 @login_required
 def reserve_book(request, pk):
     """View function for reserving a book."""
-    if request.user.bookinstance_set.filter(status__exact='r').count() >= request.user.max_books:
-        messages.error(request, 'Already reached the maximum number of {} Reserved books.'.format(request.user.max_books))
+    if request.user.bookinstance_set.filter(status__exact='r').count() >= request.user.max_books():
+        messages.error(request, 'Already reached the maximum number of {} Reserved books.'.format(request.user.max_books()))
     else:
         book_instance = get_object_or_404(BookInstance, pk=pk)
         book_instance.status = 'r'
