@@ -5,11 +5,13 @@
   {% block title %}<title>Piccola biblioteca Italiana</title>{% endblock %}
   
   
+    <link href="/main.efe67.css" rel="stylesheet">
+  
 
 	<meta charset="utf-8">
 	<meta http-equiv="x-ua-compatible" content="ie=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <!-- <base href="https://biblioteca.italianschoolsd.com"> -->
+  <base href="https://biblioteca.italianschoolsd.com">
 
 	<link href="https://fonts.googleapis.com/css?family=Nunito+Sans:400,700" rel="stylesheet">
 
@@ -37,7 +39,7 @@
 
 	
 	<a href="/" class="pa3 db mr4 h-100 w3 flex-none">
-		<img src="{% static 'images/italianschoolsd_logo.png' %}" alt="Italian school of San Diego LLC logo" class="br0 db mb0 w-100"/>
+		<img src="/img/italianschoolsd_logo.png" alt="Italian school of San Diego LLC logo" class="br0 db mb0 w-100"/>
 	</a>
 
 	
@@ -47,23 +49,26 @@
 		<li><a href="{% url 'index' %}" class="pa3 no-underline db">Home</a></li>
 		<li><a href="{% url 'books' %}" class="pa3 no-underline db">Books</a></li>
    {% if user.is_authenticated %}
+     <li>User: {{ user.get_username }}</li>
      <li><a href="{% url 'my-borrowed' %}" class="pa3 no-underline db">My Borrowed</a></li>
      <li><a href="{% url 'logout'%}?next={{request.path}}" class="pa3 no-underline db">Logout</a></li>   
    {% else %}
      <li><a href="{% url 'login'%}?next={{request.path}}" class="pa3 no-underline db">Login</a></li>   
    {% endif %} 
 	</ul>
-   {% endblock %}
+
 </nav>
 
 
     
 
-<div class="pv5 pv6-l ph3 bg-center cover" style="background-image: url('{% static 'images/bibioteca_braidense-sala-maria-teresa_by_alessandro-radice.jpg' %}')">
+<div class="pv5 pv6-l ph3 bg-center cover" style="background-image: url('/img/milan.jpg')">
   <div class="mw7 center ph3">
     <div class="db mb3">
       <div class="mw7 relative bg-fix-primary mb3">
-
+        <h1 class="f2 f1-l b ph1 di lh-title mb3 white mw6 bg-primary">
+          La piccola biblioteca Italiana
+        </h1>
       </div>
       <div class="mw7 relative bg-fix-primary">
         
@@ -107,25 +112,48 @@
 
 
 
-  <footer class="bg-black ph3 pv4 white">
+    <footer class="bg-black ph3 pv4 white">
 
 	<div class="mw7 center pt3">
+
+		<div class="measure-narrow center mb4">
+
+			<img src="/img/italianschoolsd_logo.png" alt="Italian school of San Diego LLC logo" class="db w4 center mb4 br0">
+			<p>Subscribe to our announcements mailing list</p>
+
+			<form action="https://italianschoolsd.us6.list-manage.com/subscribe/post?u=aa200714d00aa187c40c2cac4&amp;id=3b67daec83" method="post" class="flex-ns mb3">
+
+  <fieldset class="flex-auto mb2 mb0-ns mr2-ns" name="newsletter" action="newsletter-subscribe">
+    <input type="email" value="" name="EMAIL" placeholder="Your email" class="w-100" id="mce-EMAIL">
+    <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_aa200714d00aa187c40c2cac4_3b67daec83" tabindex="-1" value=""></div>
+    <label for="mce-EMAIL">Your email</label>
+  </fieldset>
+
+  <button class="btn mb3 w-100 w-auto-ns mb0-ns raise" type="submit">Submit</button>
+
+</form>
+
+
+		</div>
 
 		<div class="flex-ns justify-between">
 
 			<div>
-				<h3 class="f4 b lh-title mb1 primary">Book catalog</h3>
+				<h3 class="f4 b lh-title mb1 primary">Italian school of San Diego LLC</h3>
 				<ul class="mb3">
-					<li><a href="{% url 'authors' %}" class="link">By author</a></li>
-					<li><a href="#" class="link">By genre</a></li>
+					<li><a href="/" class="link">Home</a></li>
+					<li><a href="/classes" class="link">Classes</a></li>
+					<li><a href="/about" class="link">About</a></li>
+					<li><a href="/news" class="link">News</a></li>
+					<li><a href="/contact" class="link">Contact</a></li>
 				</ul>
 			</div>
 
 			<div>
-				<h3 class="f4 b lh-title mb1 primary">Italian school of San Diego</h3>
+				<h3 class="f4 b lh-title mb1 primary">Find out more</h3>
 				<ul class="mb3">
-					<li><a href="https://www.italianschoolsd.com/about/" class="link">About</a></li>
-					<li><a href="https://www.italianschoolsd.com/classes/" class="link">Classes</a></li>
+					<li><a href="/covid19" class="link">COVID-19 policy</a></li>
+					<li><a href="/enroll" class="link">Tuition</a></li>
 				</ul>
 			</div>
 
@@ -176,5 +204,13 @@
   
 </div>
 
-</body>
+
+<script src="/app.js"></script>
+
+
+    
+    
+      <script src="/main.efe67.js"></script>
+    
+  </body>
 </html>
