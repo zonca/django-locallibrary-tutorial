@@ -13,7 +13,8 @@ class User(AbstractUser):
     students_at_Italian_school = models.IntegerField(default=1)
 
     def max_books(self):
-        return self.students_at_Italian_school + 1
+        # return self.students_at_Italian_school + 1
+        return 1
 
 class Genre(models.Model):
     """Model representing a book genre (e.g. Science Fiction, Non Fiction)."""
@@ -99,7 +100,7 @@ class BookInstance(models.Model):
         max_length=1,
         choices=LOAN_STATUS,
         blank=True,
-        default='o',
+        default='a',
         help_text='Book availability')
 
     class Meta:
