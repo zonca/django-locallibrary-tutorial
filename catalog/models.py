@@ -23,6 +23,9 @@ class Genre(models.Model):
         help_text="Enter a book genre (e.g. Science Fiction, French Poetry etc.)"
         )
 
+    def get_absolute_url(self):
+        return reverse('genre-detail', args=[str(self.id)])
+
     def __str__(self):
         """String for representing the Model object (in Admin site etc.)"""
         return self.name

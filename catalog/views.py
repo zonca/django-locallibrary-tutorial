@@ -54,6 +54,14 @@ class AuthorDetailView(generic.DetailView):
     """Generic class-based detail view for an author."""
     model = Author
 
+class GenreListView(generic.ListView):
+    model = Genre
+    paginate_by = 10
+    queryset = Genre.objects.all().annotate(book_count=Count("book"))
+
+
+class GenreDetailView(generic.DetailView):
+    model = Genre
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 

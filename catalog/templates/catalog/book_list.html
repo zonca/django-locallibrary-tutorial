@@ -5,15 +5,18 @@
 
     {% if book_list %}
 
+<section class="cf w-100 pa2-ns">
       {% for book in book_list %}
-        <div>
-          <a href="{{ book.get_absolute_url }}">
-          <img src="{{MEDIA_URL}}{{book.cover.url}}" width="150px" /></a>
-          <a href="{{ book.get_absolute_url }}"> {{ book.title }}</a> ({{book.author}})
-      </div>
-
+  <article class="fl w-100 w-25-m  w-25-ns pa2-ns">
+    <div class="aspect-ratio aspect-ratio--4x6">
+<a href="{{ book.get_absolute_url }}">
+      <img style="background-image:url({{MEDIA_URL}}{{book.cover.url}});" 
+      class="db bg-center cover aspect-ratio--object"/>
+</a>
+    </div>
+  </article>
       {% endfor %}
-
+</section>
 
     {% else %}
       <p>There are no books in the library.</p>

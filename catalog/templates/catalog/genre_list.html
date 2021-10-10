@@ -1,0 +1,22 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+<h1>Genres</h1>
+
+  <ul>
+
+  {% for genre in genre_list %}
+    <li>
+      <a href="{{ genre.get_absolute_url }}">
+      {{ genre }} ({{genre.book_count}})
+      </a>
+    </li>
+  {% endfor %}
+
+ </ul>
+        
+        
+        
+{% endblock %}
+

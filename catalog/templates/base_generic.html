@@ -76,12 +76,12 @@
 <div class="bg-off-white pv4">
   <div class="ph3 mw7 center">
     {% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+	<ul class="messages">
+	    {% for message in messages %}
+	    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+	    {% endfor %}
+	</ul>
+	{% endif %}
   {% block content %}{% endblock %}
 
   {% block pagination %}
@@ -107,7 +107,7 @@
 
 
 
-  <footer class="bg-black ph3 pv4 white">
+  <footer class="cf bg-black ph3 pv4 white">
 
 	<div class="mw7 center pt3">
 
@@ -117,7 +117,7 @@
 				<h3 class="f4 b lh-title mb1 primary">Book catalog</h3>
 				<ul class="mb3">
 					<li><a href="{% url 'authors' %}" class="link">By author</a></li>
-					<li><a href="#" class="link">By genre</a></li>
+					<li><a href="{% url 'genres' %}" class="link">By genre</a></li>
 				</ul>
 			</div>
 
