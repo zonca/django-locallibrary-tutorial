@@ -1,7 +1,7 @@
 restart:
 	sudo systemctl restart gunicorn
 
-restart:
+stop:
 	sudo systemctl stop gunicorn
 
 migrations:
