@@ -35,7 +35,7 @@ from django.views import generic
 class BookListView(generic.ListView):
     """Generic class-based view for a list of books."""
     model = Book
-    paginate_by = 10
+    paginate_by = 16
 
 
 class BookDetailView(generic.DetailView):
@@ -46,7 +46,7 @@ class BookDetailView(generic.DetailView):
 class AuthorListView(generic.ListView):
     """Generic class-based list view for a list of authors."""
     model = Author
-    paginate_by = 10
+    paginate_by = 20
     queryset = Author.objects.all().annotate(book_count=Count("book"))
 
 
@@ -56,7 +56,7 @@ class AuthorDetailView(generic.DetailView):
 
 class GenreListView(generic.ListView):
     model = Genre
-    paginate_by = 10
+    paginate_by = 20
     queryset = Genre.objects.all().annotate(book_count=Count("book"))
 
 

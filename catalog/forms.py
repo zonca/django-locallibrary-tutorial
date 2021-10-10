@@ -25,26 +25,35 @@ class RenewBookForm(forms.Form):
         return data
 
 
-from django_registration.forms import RegistrationForm
+from django_registration.forms import RegistrationFormUniqueEmail
 
 from .models import User
 
 
-class MyCustomUserForm(RegistrationForm):
+class MyCustomUserForm(RegistrationFormUniqueEmail):
+
 
     students_at_Italian_school = forms.IntegerField(required=True, help_text="Number of students at Italian school, set to 0 if you just donated books, you will still be able to borrow 1 book")
-    class Meta(RegistrationForm.Meta):
+
+    class Meta(RegistrationFormUniqueEmail.Meta):
         model = User
         help_texts = {
-            'username': 'Required. Please set to "Firstname_Lastname" one of the students of Italian school. Letters, digits and @/./+/-/_ only',
+            'username': ''
         }
+        widgets = {'username': forms.HiddenInput()}
 
+    def __init__(self, *args, **kwargs):
+        super(MyCustomUserForm, self).__init__(*args, **kwargs)
+        self.fields['username'].required = False
 
     def save(self, commit=True):
         user = super(MyCustomUserForm, self).save(commit=False)
         user.students_at_Italian_school = self.cleaned_data["students_at_Italian_school"]
+        user.username = self.cleaned_data["email"]
         if commit:
             user.save()
         return user
 
 MyCustomUserForm.Meta.fields  += ['students_at_Italian_school']
+#MyCustomUserForm.fields['username'].widget = forms.HiddenInput()
+#MyCustomUserForm.fields['username'].required = False
