@@ -10,28 +10,40 @@ However, you will need to give back your currently borrowed books before being a
 the total books checked-out are not over your maximum.
 </p>
 
-    <h1>Borrowed books</h1>
+    <h2>Borrowed books</h2>
 
     <ul>
 
-      {% for bookinst in bookinstance_list %}
-      {% ifequal bookinst.status 'o' %}
-      <li class="{% if bookinst.is_overdue %}text-danger{% endif %}">
-        <a href="{% url 'book-detail' bookinst.book.pk %}">{{bookinst.book.title}}</a> (due {{ bookinst.due_back }})
+      {% for loan in loan_list %}
+      {% if loan.is_loan %}
+      <li class="{% if loan.is_overdue %}text-danger{% endif %}">
+        <a href="{% url 'book-detail' loan.book_instance.book.pk %}">{{loan.book_instance.book.title}}</a> (checked out on {{loan.loan_date}}, due {{ loan.due_date }})
       </li>
-      {% endifequal %}
+      {% endif %}
       {% endfor %}
     </ul>
 
-    <h1>Reserved books</h1>
+    <h2>Reserved books</h2>
     <ul>
 
-    {% for bookinst in bookinstance_list %}
-    {% ifequal bookinst.status 'r' %}
+    {% for loan in loan_list %}
+    {% if loan.is_reservation %}
     <li>
-      <a href="{% url 'book-detail' bookinst.book.pk %}">{{bookinst.book.title}}</a> - <a href="{% url 'cancel-reservation' bookinst.pk %}">Cancel reservation</a>
+      <a href="{% url 'book-detail' loan.book_instance.book.pk %}">{{loan.book_instance.book.title}}</a> (reserved on {{loan.reserved_date}}) <a href="{% url 'cancel-reservation' loan.pk %}">Cancel reservation</a>
     </li>
-    {% endifequal %}
+    {% endif %}
+    {% endfor %}
+    </ul>
+
+    <h2>Past loans</h2>
+    <ul>
+
+    {% for loan in loan_list %}
+    {% if loan.return_date and loan.loan_date %}
+    <li>
+      <a href="{% url 'book-detail' loan.book_instance.book.pk %}">{{loan.book_instance.book.title}}</a> (from {{loan.loan_date}} to {{loan.return_date}})
+    </li>
+    {% endif %}
     {% endfor %}
     </ul>
 {% endblock %}

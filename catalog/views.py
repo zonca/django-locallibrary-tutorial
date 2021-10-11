@@ -1,9 +1,10 @@
+from datetime import date
 from django.shortcuts import render
 from django.db.models import Count
 
 # Create your views here.
 
-from .models import Book, Author, BookInstance, Genre
+from .models import Book, Author, BookInstance, Genre, Loan
 
 
 def index(request):
@@ -12,12 +13,8 @@ def index(request):
     num_books = Book.objects.all().count()
     num_instances = BookInstance.objects.all().count()
     # Available copies of books
-    num_instances_available = BookInstance.objects.filter(status__exact='a').count()
+    num_instances_available = num_instances - Loan.objects.filter(return_date__isnull=True).count()
     num_authors = Author.objects.count()  # The 'all()' is implied by default.
-
-    # Number of visits to this view, as counted in the session variable.
-    num_visits = request.session.get('num_visits', 1)
-    request.session['num_visits'] = num_visits+1
 
     # Render the HTML template index.html with the data in the context variable.
     return render(
@@ -25,7 +22,7 @@ def index(request):
         'index.html',
         context={'num_books': num_books, 'num_instances': num_instances,
                  'num_instances_available': num_instances_available, 'num_authors': num_authors,
-                 'num_visits': num_visits},
+                 },
     )
 
 
@@ -68,12 +65,12 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     """Generic class-based view listing books on loan to current user."""
-    model = BookInstance
+    model = Loan
     template_name = 'catalog/bookinstance_list_borrowed_user.html'
     paginate_by = 10
 
     def get_queryset(self):
-        return BookInstance.objects.filter(borrower=self.request.user).order_by('due_back')
+        return Loan.objects.filter(borrower=self.request.user).order_by('due_date')
 
 
 # Added as part of challenge!
@@ -139,63 +136,21 @@ from django.contrib import messages
 @login_required
 def reserve_book(request, pk):
     """View function for reserving a book."""
-    if request.user.bookinstance_set.filter(status__exact='r').count() >= request.user.max_books():
-        messages.error(request, 'Already reached the maximum number of {} Reserved books.'.format(request.user.max_books()))
+    if request.user.loan_set.filter(reserved_date__isnull=False, return_date__isnull=True).count() >= request.user.max_books:
+        messages.error(request, 'Already reached the maximum number of {} Reserved books.'.format(request.user.max_books))
     else:
-        book_instance = get_object_or_404(BookInstance, pk=pk)
-        book_instance.status = 'r'
-        book_instance.borrower = request.user
-        book_instance.save()
+        book_instance= get_object_or_404(BookInstance, pk=pk)
+        if book_instance.status != "Available":
+            messages.error(request, 'Book not available')
+        else:
+            loan = Loan(book_instance=book_instance, borrower=request.user, reserved_date=date.today())
+            loan.save()
     return HttpResponseRedirect(reverse('my-borrowed'))
 
 @login_required
 def cancel_reservation(request, pk):
-    book_instance = get_object_or_404(BookInstance, pk=pk)
-    if book_instance.borrower == request.user and book_instance.status == 'r':
-        book_instance.borrower = None
-        book_instance.status = 'a'
-        book_instance.save()
+    loan = get_object_or_404(Loan, pk=pk)
+    if loan.borrower == request.user and loan.is_reservation:
+        loan.return_date = date.today()
+        loan.save()
     return HttpResponseRedirect(reverse('my-borrowed'))
-
-
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
-from .models import Author
-
-
-class AuthorCreate(PermissionRequiredMixin, CreateView):
-    model = Author
-    fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
-    initial = {'date_of_death': '11/06/2020'}
-    permission_required = 'catalog.can_mark_returned'
-
-
-class AuthorUpdate(PermissionRequiredMixin, UpdateView):
-    model = Author
-    fields = '__all__' # Not recommended (potential security issue if more fields added)
-    permission_required = 'catalog.can_mark_returned'
-
-
-class AuthorDelete(PermissionRequiredMixin, DeleteView):
-    model = Author
-    success_url = reverse_lazy('authors')
-    permission_required = 'catalog.can_mark_returned'
-
-
-# Classes created for the forms challenge
-class BookCreate(PermissionRequiredMixin, CreateView):
-    model = Book
-    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
-    permission_required = 'catalog.can_mark_returned'
-
-
-class BookUpdate(PermissionRequiredMixin, UpdateView):
-    model = Book
-    fields = ['title', 'author', 'summary', 'isbn', 'genre', 'language']
-    permission_required = 'catalog.can_mark_returned'
-
-
-class BookDelete(PermissionRequiredMixin, DeleteView):
-    model = Book
-    success_url = reverse_lazy('books')
-    permission_required = 'catalog.can_mark_returned'

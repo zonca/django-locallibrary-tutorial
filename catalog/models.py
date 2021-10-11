@@ -12,9 +12,13 @@ class User(AbstractUser):
 
     students_at_Italian_school = models.IntegerField(default=1)
 
+    @property
     def max_books(self):
         # return self.students_at_Italian_school + 1
         return 1
+
+    def current_loans_or_reservations(self):
+        return self.loan_set.filter(returned_date__isnull=False)
 
 class Genre(models.Model):
     """Model representing a book genre (e.g. Science Fiction, Non Fiction)."""
@@ -55,7 +59,7 @@ class Book(models.Model):
 
     cover = models.ImageField(upload_to='covers')
     url = models.URLField(null=True)
-    
+
     class Meta:
         ordering = ['title', 'author']
 
@@ -84,6 +88,25 @@ class BookInstance(models.Model):
     book = models.ForeignKey('Book', on_delete=models.RESTRICT, null=True)
     imprint = models.CharField(max_length=200)
 
+    @property
+    def status(self):
+        loan = self.loan
+        if not loan:
+            return "Available"
+        elif loan.is_reservation:
+            return "Reserved"
+        elif loan.is_loan:
+            return "On loan"
+        else:
+            return "Unknown"
+
+    @property
+    def loan(self):
+        try:
+            return self.loan_set.get(return_date__isnull=True)
+        except Loan.DoesNotExist:
+            return None
+
     def __str__(self):
         """String for representing the Model object."""
         return '{0} ({1})'.format(self.book.title, self.imprint)
@@ -100,6 +123,18 @@ class Loan(models.Model):
         if self.loan_date is not None and self.due_date is None:
             self.due_date = self.loan_date + self.DEFAULT_LOAN_DURATION
         super().save(*args, **kwargs)
+
+    @property
+    def is_overdue(self):
+        return self.due_date and date.today() > self.due_date and self.return_date is None
+
+    @property
+    def is_reservation(self):
+        return self.reserved_date and self.loan_date is None and self.return_date is None
+
+    @property
+    def is_loan(self):
+        return self.loan_date is not None and self.return_date is None
 
     def __str__(self):
         """String for representing the Model object."""

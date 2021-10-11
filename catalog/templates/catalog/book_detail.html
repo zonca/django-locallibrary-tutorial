@@ -10,7 +10,6 @@
 
 <p><strong>Author:</strong> <a href="{{ book.author.get_absolute_url }}">{{ book.author }}</a></p>
 <p><strong>Summary:</strong> {{ book.summary }}</p>
-<p><strong>ISBN:</strong> {{ book.isbn }}</p> 
 <p><strong>Language:</strong> {{ book.language }}</p>  
 <p><strong>Genre:</strong> {{ book.genre.all|join:", " }}</p>
 <p><strong>Links:</strong> <a href="{{ book.url }}">Amazon.it</a></p>
@@ -20,11 +19,10 @@
 
 {% for copy in book.bookinstance_set.all %}
 <hr>
-<p style="font-weight:bold;color:{% if copy.status == 'a' %}green{% elif copy.status == 'd' %}red{% else %}orange{% endif %}">{{ copy.get_status_display }}</p>
-{% if copy.status == 'a' %}<p><a href="{% url 'reserve-book' copy.pk %}"><strong>Reserve</strong></a></p>{% endif %}
-{% if copy.status != 'a' %}<p><strong>Due to be returned:</strong> {{copy.due_back}}</p>{% endif %}
+<p style="font-weight:bold;color:{% if copy.status == "Available" %}green{% elif copy.status == "On loan" %}red{% else %}orange{% endif %}">{{ copy.status }}</p>
+{% if not copy.loan %}<p><a href="{% url 'reserve-book' copy.pk %}"><strong>Reserve</strong></a></p>{% endif %}
+{% if copy.loan %}<p><strong>Due to be returned:</strong> {{copy.loan.due_date}}</p>{% endif %}
 <p><strong>Imprint:</strong> {{copy.imprint}}</p>
-<p class="i"><strong>Id:</strong> {{copy.id}}</p>
 
 {% endfor %}
 </div>
