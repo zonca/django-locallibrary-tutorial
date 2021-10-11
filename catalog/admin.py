@@ -2,7 +2,7 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Author, Genre, Book, BookInstance, Language
+from .models import Author, Genre, Book, BookInstance, Language, Loan
 
 """Minimal registration of Models.
 admin.site.register(Book)
@@ -20,6 +20,9 @@ class BooksInline(admin.TabularInline):
     """Defines format of inline book insertion (used in AuthorAdmin)"""
     model = Book
 
+@admin.register(Loan)
+class LoanAdmin(admin.ModelAdmin):
+    list_display = [field.name for field in Loan._meta.get_fields()]
 
 @admin.register(Author)
 class AuthorAdmin(admin.ModelAdmin):
@@ -33,7 +36,6 @@ class AuthorAdmin(admin.ModelAdmin):
     list_display = ('last_name',
                     'first_name')
     fields = ['first_name', 'last_name']
-    inlines = [BooksInline]
 
 
 class BooksInstanceInline(admin.TabularInline):
@@ -62,17 +64,17 @@ class BookInstanceAdmin(admin.ModelAdmin):
      - filters that will be displayed in sidebar (list_filter)
      - grouping of fields into sections (fieldsets)
     """
-    list_display = ('book', 'status', 'borrower', 'due_back', 'id')
-    list_filter = ('status', 'due_back')
+    list_display = ('book', 'id')
+    #list_filter = ('status', 'due_back')
 
-    fieldsets = (
-        (None, {
-            'fields': ('book', 'imprint', 'id')
-        }),
-        ('Availability', {
-            'fields': ('status', 'due_back', 'borrower')
-        }),
-    )
+    #fieldsets = (
+    #    (None, {
+    #        'fields': ('book', 'imprint', 'id')
+    #    }),
+    #    ('Availability', {
+    #        'fields': ('status', 'due_back', 'borrower')
+    #    }),
+    #)
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin

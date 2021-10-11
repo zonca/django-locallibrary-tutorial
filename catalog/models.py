@@ -75,7 +75,7 @@ class Book(models.Model):
 
 
 import uuid  # Required for unique book instances
-from datetime import date
+from datetime import date, timedelta
 
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
@@ -83,37 +83,27 @@ class BookInstance(models.Model):
                           help_text="Unique ID for this particular book across whole library")
     book = models.ForeignKey('Book', on_delete=models.RESTRICT, null=True)
     imprint = models.CharField(max_length=200)
-    due_back = models.DateField(null=True, blank=True)
-    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-
-    @property
-    def is_overdue(self):
-        if self.due_back and date.today() > self.due_back:
-            return True
-        return False
-
-    LOAN_STATUS = (
-        ('d', 'Maintenance'),
-        ('o', 'On loan'),
-        ('a', 'Available'),
-        ('r', 'Reserved'),
-    )
-
-    status = models.CharField(
-        max_length=1,
-        choices=LOAN_STATUS,
-        blank=True,
-        default='a',
-        help_text='Book availability')
-
-    class Meta:
-        ordering = ['due_back']
-        permissions = (("can_mark_returned", "Set book as returned"),)
 
     def __str__(self):
         """String for representing the Model object."""
-        return '{0} ({1})'.format(self.id, self.book.title)
+        return '{0} ({1})'.format(self.book.title, self.imprint)
 
+class Loan(models.Model):
+    DEFAULT_LOAN_DURATION = timedelta(days=14)
+    reserved_date = models.DateField(blank=True, null=True)
+    loan_date = models.DateField(blank=True, null=True)
+    due_date = models.DateField(blank=True, null=True)
+    return_date = models.DateField(blank=True, null=True)
+    borrower = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    book_instance = models.ForeignKey(BookInstance, on_delete=models.DO_NOTHING)
+    def save(self, *args, **kwargs):
+        if self.loan_date is not None and self.due_date is None:
+            self.due_date = self.loan_date + self.DEFAULT_LOAN_DURATION
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return '{0} - {1}'.format(self.book_instance.book.title, self.borrower.username)
 
 class Author(models.Model):
     """Model representing an author."""

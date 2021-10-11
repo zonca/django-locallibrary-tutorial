@@ -9,3 +9,6 @@ migrations:
 
 migrate:
 	python manage.py migrate
+
+activate:
+	echo 'source myprojectenv/bin/activate'
