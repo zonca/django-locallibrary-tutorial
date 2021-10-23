@@ -1,11 +1,18 @@
 from datetime import date
 from django.shortcuts import render
 from django.db.models import Count
+from django.http import HttpResponseRedirect
 
 # Create your views here.
 
 from .models import Book, Author, BookInstance, Genre, Loan
 
+def toggle_available_only(request):
+    if "available_only" in request.session:
+        request.session["available_only"] = not request.session["available_only"]
+    else:
+        request.session["available_only"] = True
+    return HttpResponseRedirect(request.GET.get('next', "/books"))
 
 def index(request):
     """View function for home page of site."""
@@ -32,7 +39,7 @@ from django.views import generic
 class BookListView(generic.ListView):
     """Generic class-based view for a list of books."""
     model = Book
-    paginate_by = 16
+    paginate_by = 12
 
 
 class BookDetailView(generic.DetailView):

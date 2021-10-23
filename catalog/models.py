@@ -77,6 +77,14 @@ class Book(models.Model):
         """String for representing the Model object."""
         return self.title
 
+    @property
+    def is_available(self):
+        for bookinstance in self.bookinstance_set.all():
+            if bookinstance.status == "Available":
+                return True
+        return False
+
+
 
 import uuid  # Required for unique book instances
 from datetime import date, timedelta

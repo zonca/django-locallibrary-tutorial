@@ -1,4 +1,4 @@
-{% extends "base_generic.html" %}
+{% extends "base_filter.html" %}
 
 {% block content %}
     <h1>Book List</h1>
@@ -7,14 +7,16 @@
 
 <section class="cf w-100 pa2-ns">
       {% for book in book_list %}
-  <article class="fl w-100 w-25-m  w-25-ns pa2-ns">
-    <div class="aspect-ratio aspect-ratio--4x6">
-<a href="{{ book.get_absolute_url }}">
-      <img style="background-image:url({{MEDIA_URL}}{{book.cover.url}});" 
-      class="db bg-center cover aspect-ratio--object"/>
-</a>
-    </div>
-  </article>
+{% if not request.session.available_only or book.is_available %}
+	  <article class="fl w-100 w-25-m  w-25-ns pa2-ns">
+			<div class="aspect-ratio aspect-ratio--4x6">
+			<a href="{{ book.get_absolute_url }}">
+				  <img style="background-image:url({{MEDIA_URL}}{{book.cover.url}});" 
+				  class="db bg-center cover aspect-ratio--object"/>
+			</a>
+		</div>
+	  </article>
+{% endif %}
       {% endfor %}
 </section>
 

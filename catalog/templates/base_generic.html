@@ -21,13 +21,15 @@
 
 	
 	<meta property="og:type" content="business.business">
-	<meta property="og:title" content="Italian school of San Diego LLC">
+	<meta property="og:title" content="Piccola biblioteca Italiana di San Diego">
 	<meta property="og:url" content="/">
 	<meta property="og:image" content="/img/italianschoolsd_logo.png">
 
   <!-- Add additional CSS in static file -->
   {% load static %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+{% block extrahead %}{% endblock %}
 
 </head>
 
@@ -82,6 +84,9 @@
 	    {% endfor %}
 	</ul>
 	{% endif %}
+
+    {% block abovecontent %}{% endblock %}
+
   {% block content %}{% endblock %}
 
   {% block pagination %}
@@ -116,8 +121,8 @@
 			<div>
 				<h3 class="f4 b lh-title mb1 primary">Book catalog</h3>
 				<ul class="mb3">
-					<li><a href="{% url 'authors' %}" class="link">By author</a></li>
 					<li><a href="{% url 'genres' %}" class="link">By genre</a></li>
+					<li><a href="{% url 'authors' %}" class="link">By author</a></li>
 				</ul>
 			</div>
 
@@ -177,4 +182,7 @@
 </div>
 
 </body>
+
+{% block extrajs %} {% endblock %}
+
 </html>
