@@ -1,0 +1,20 @@
+{% extends "base_generic.html" %}
+
+{% block extrahead %}
+<style>
+
+
+</style>
+
+{% endblock %}
+
+{% block abovecontent %}
+
+  {% load static %}
+<div>
+  <span style="">Show only available books</span>
+<a href="{% url 'toggle-available-only' %}?next={{request.path}}">
+<img id="toggle-available-only-button" style="vertical-align:middle" width=50px src="/static/images/button-{% if request.session.available_only %}on{% else %}off{% endif %}.png"/></a>
+
+</div>
+{% endblock %}
