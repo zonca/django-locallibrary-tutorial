@@ -1,4 +1,5 @@
 from django.db import models
+from datetime import date, timedelta
 
 # Create your models here.
 
@@ -13,6 +14,10 @@ class User(AbstractUser):
     students_at_Italian_school = models.IntegerField(default=1)
     library_card_until = models.DateField(blank=True, null=True)
     supporter = models.BooleanField(default=False)
+
+    @property
+    def is_expired(self):
+        return if self.library_card_until is None or date.today() > self.library_card_until
 
     @property
     def max_books(self):
@@ -89,7 +94,6 @@ class Book(models.Model):
 
 
 import uuid  # Required for unique book instances
-from datetime import date, timedelta
 
 class BookInstance(models.Model):
     """Model representing a specific copy of a book (i.e. that can be borrowed from the library)."""
