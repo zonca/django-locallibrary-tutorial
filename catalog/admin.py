@@ -99,9 +99,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import User
 
-UserAdmin.list_display += ("students_at_Italian_school",)  # don't forget the commas
-UserAdmin.list_filter += ("students_at_Italian_school",)
+UserAdmin.list_display += ("students_at_Italian_school", "supporter", "library_card_until")  # don't forget the commas
+UserAdmin.list_filter += ("students_at_Italian_school", "supporter", "library_card_until")
 UserAdmin.fieldsets += (
-    ("students_at_Italian_school", {"fields": ("students_at_Italian_school",)}),
+    ("Library card", {"fields": ("students_at_Italian_school", "supporter", "library_card_until")}),
 )
 admin.site.register(User, UserAdmin)

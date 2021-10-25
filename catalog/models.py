@@ -22,7 +22,7 @@ class User(AbstractUser):
     @property
     def max_books(self):
         # return self.students_at_Italian_school + 1
-        return 1
+        return 0 if self.is_expired else 1
 
     def current_loans_or_reservations(self):
         return self.loan_set.filter(returned_date__isnull=False)
