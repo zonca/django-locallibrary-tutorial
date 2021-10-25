@@ -17,7 +17,7 @@ class User(AbstractUser):
 
     @property
     def is_expired(self):
-        return if self.library_card_until is None or date.today() > self.library_card_until
+        return self.library_card_until is None or date.today() > self.library_card_until
 
     @property
     def max_books(self):
