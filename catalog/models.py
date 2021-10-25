@@ -11,6 +11,8 @@ class User(AbstractUser):
         db_table = 'auth_user'
 
     students_at_Italian_school = models.IntegerField(default=1)
+    library_card_until = models.DateField(blank=True, null=True)
+    supporter = models.BooleanField(default=False)
 
     @property
     def max_books(self):

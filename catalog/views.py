@@ -92,7 +92,7 @@ class LoanedBooksAllListView(PermissionRequiredMixin, generic.ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        return BookInstance.objects.order_by('due_back')
+        return Loan.objects.order_by('due_date')
 
 
 from django.shortcuts import get_object_or_404

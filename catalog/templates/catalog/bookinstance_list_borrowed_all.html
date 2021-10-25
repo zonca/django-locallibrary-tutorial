@@ -3,17 +3,40 @@
 {% block content %}
     <h1>All Borrowed Books</h1>
 
-    {% if bookinstance_list %}
+    <h2>Borrowed books</h2>
+
     <ul>
 
-      {% for bookinst in bookinstance_list %} 
-      <li class="{% if bookinst.is_overdue %}text-danger{% endif %}">
-        <a href="{% url 'book-detail' bookinst.book.pk %}">{{bookinst.book.title}}</a> ({{ bookinst.due_back }}) {% if user.is_staff %}- {{ bookinst.borrower }}{% endif %} {% if perms.catalog.can_mark_returned %}- <a href="{% url 'renew-book-librarian' bookinst.id %}">Renew</a>  {% endif %}
+      {% for loan in loan_list %}
+      {% if loan.is_loan %}
+      <li class="{% if loan.is_overdue %}text-danger{% endif %}">
+       <b>{{ loan.borrower }}</b>:  <a href="{% url 'book-detail' loan.book_instance.book.pk %}">{{loan.book_instance.book.title}}</a> (checked out on {{loan.loan_date}}, due {{ loan.due_date }})
       </li>
+      {% endif %}
       {% endfor %}
     </ul>
 
-    {% else %}
-      <p>There are no books borrowed.</p>
-    {% endif %}       
+    <h2>Reserved books</h2>
+    <ul>
+
+    {% for loan in loan_list %}
+    {% if loan.is_reservation %}
+    <li>
+      <b>{{ loan.borrower }}</b>: <a href="{% url 'book-detail' loan.book_instance.book.pk %}">{{loan.book_instance.book.title}}</a> (reserved on {{loan.reserved_date}})
+    </li>
+    {% endif %}
+    {% endfor %}
+    </ul>
+
+    <h2>Past loans</h2>
+    <ul>
+
+    {% for loan in loan_list %}
+    {% if loan.return_date and loan.loan_date %}
+    <li>
+      <a href="{% url 'book-detail' loan.book_instance.book.pk %}">{{loan.book_instance.book.title}}</a> (from {{loan.loan_date}} to {{loan.return_date}})
+    </li>
+    {% endif %}
+    {% endfor %}
+    </ul>
 {% endblock %}
